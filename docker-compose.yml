@@ -1,0 +1,118 @@
+services:
+  mysql-server:
+    container_name: mysql-server
+    restart: always
+    image: ${MYSQL_SERVER_IMAGE}:${MYSQL_SERVER_TAG}
+    networks:
+      - zbx_net
+    command:
+      - mysqld
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_bin
+    environment:
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+    ports:
+      - 3306:3306
+    volumes:
+      - /var/lib/mysql:/var/lib/mysql:rw
+    # - /etc/my.cnf:/etc/my.cnf:ro
+
+  zabbix-server-mysql:
+    container_name: zabbix-server-mysql
+    restart: always
+    build:
+      context: ./
+      dockerfile: Dockerfile
+      args: 
+        ZABBIX_SERVER_IMAGE: ${ZABBIX_SERVER_IMAGE}
+        ZABBIX_SERVER_TAG: ${ZABBIX_SERVER_TAG}
+    networks:
+      - zbx_net
+    ports:
+      - 10051:10051
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+      - /usr/lib/zabbix/alertscripts:/usr/lib/zabbix/alertscripts:ro
+      - /usr/lib/zabbix/externalscripts:/usr/lib/zabbix/externalscripts:ro
+      - /var/lib/zabbix/export:/var/lib/zabbix/export:rw
+      - /var/lib/zabbix/modules:/var/lib/zabbix/modules:ro
+      - /var/lib/zabbix/enc:/var/lib/zabbix/enc:ro
+      - /var/lib/zabbix/ssh_keys:/var/lib/zabbix/ssh_keys:ro
+      - /var/lib/zabbix/mibs:/var/lib/zabbix/mibs:ro
+      - /var/lib/zabbix/snmptraps:/var/lib/zabbix/snmptraps:rw
+    environment:
+      - DB_SERVER_HOST=mysql-server
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - ZBX_JAVAGATEWAY=zabbix-java-gateway
+    depends_on:
+      - mysql-server
+
+  zabbix-web-nginx-mysql:
+    container_name: zabbix-web-nginx
+    restart: always
+    image: ${ZABBIX_WEB_IMAGE}:${ZABBIX_WEB_TAG}
+    networks:
+      - zbx_net
+    ports:
+      - 80:8080
+      - 443:8443
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/ssl/nginx:/etc/ssl/nginx:ro
+      - /usr/share/zabbix/modules/:/usr/share/zabbix/modules/:ro
+    environment:
+      - ZBX_SERVER_NAME=${ZBX_SERVER_NAME}
+      - ZBX_SERVER_HOST=zabbix-server-mysql
+      - DB_SERVER_HOST=mysql-server
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+    depends_on:
+      - mysql-server
+      - zabbix-server-mysql
+
+  zabbix-java-gateway:
+    container_name: zabbix-java-gateway
+    restart: always
+    image: zabbix/zabbix-java-gateway:ubuntu-7.0-latest
+    networks:
+      - zbx_net
+    ports:
+      - 10052:10052
+
+  grafana-server:
+    container_name: grafana-server
+    restart: always
+    image: ${GRAFANA_SERVER_IMAGE}:${GRAFANA_SERVER_TAG}
+    networks:
+      - zbx_net
+    ports:
+      - 3000:3000
+    volumes:
+      - /var/lib/grafana:/var/lib/grafana
+    user: "root:root"
+    environment:
+      - GF_DATABASE_TYPE=mysql
+      - GF_DATABASE_HOST=mysql-server
+      - GF_DATABASE_NAME=grafana
+      - GF_DATABASE_USER=grafana
+      - GF_DATABASE_PASSWORD=grafana
+      - GF_INSTALL_PLUGINS=alexanderzobnin-zabbix-app
+
+networks:
+  zbx_net:
+    name: zbx_net
+    driver: bridge
+    ipam:
+      config:
+      - subnet: 172.20.0.0/16
+        ip_range: 172.20.240.0/20
