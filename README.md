@@ -26,7 +26,7 @@ Antes de começar, você vai precisar ter instalado em sua máquina as ferrament
 >- Nginx
 >- Grafana Server
 
-Clone o repositório
+Clone o repositório:
 ```bash
 git clone https://github.com/ZTaigho/zabbixDocker.git
 ```
@@ -81,12 +81,12 @@ docker restart grafana-server
 
 ### REMOVER ZABBIX/GRAFANA
 
-Remover apenas os containers
+Remover apenas os containers:
 ```bash
 docker compose down
 ```
 
-Remover os containers + volumes
+Remover os containers + volumes:
 ```bash
 docker compose down -v
 ```
