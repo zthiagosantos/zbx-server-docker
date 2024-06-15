@@ -1,7 +1,7 @@
 <h1 align="center">ZABBIX + GRAFANA COM DOCKER</h1>
 
 ## OBJETIVO DO PROJETO
-Este projeto visa configurar um laboratório Zabbix de modo ágil e prático. Este ambiente permite testar e demonstrar as capacidades do Zabbix sem a complexidade de uma instalação em produção.
+Este projeto visa configurar um laboratório Zabbix + Grafana de modo ágil e prático. Este ambiente permite testar e demonstrar as capacidades do Zabbix sem a complexidade de uma instalação em produção.
 
 ### CONTEÚDO
 <!--ts-->
