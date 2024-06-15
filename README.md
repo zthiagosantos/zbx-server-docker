@@ -36,7 +36,7 @@ Configure as variáveis do banco de dados editando o arquivo `.env`:
 ```env
 MYSQL_DATABASE=zabbix             # banco de dados 'zabbix'
 MYSQL_PASSWORD=zabbix             # senha do banco de dados 'zabbix'
-MYSQL_ROOT_PASSWORD=<changeme>    # senha para usuário 'root'
+MYSQL_ROOT_PASSWORD=<password>    # senha para usuário 'root'
 MYSQL_USER=zabbix                 # usuário do banco de dados 'zabbix'
 ```
 
