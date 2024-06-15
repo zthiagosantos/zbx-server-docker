@@ -19,7 +19,7 @@ Antes de começar, você vai precisar ter instalado em sua máquina as ferrament
 - [Docker](https://docs.docker.com/engine/install/)
 
 ### INSTALAR ZABBIX SERVER
->Este projeto é composoto pelas seguintes aplicações:
+>Este projeto é composto pelas seguintes aplicações:
 >- MySQL
 >- Zabbix Server
 >- Zabbix Java Gateway
