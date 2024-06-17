@@ -28,7 +28,7 @@ Antes de começar, você vai precisar ter instalado em sua máquina as ferrament
 
 Clone o repositório:
 ```bash
-git clone https://github.com/ZTaigho/zabbixDocker.git
+git clone https://github.com/zthiagosantos/zbx-server-docker.git
 ```
 
 Configure as variáveis do banco de dados editando o arquivo `.env`:
