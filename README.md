@@ -66,10 +66,10 @@ docker exec -it mysql-server mysql -uroot -p
 
 b. Agora, crie o banco de dados e conceda as permissões:
 ```bash
-# CREATE DATABASE grafana;
-# CREATE USER 'grafana'@'%' IDENTIFIED BY 'grafana';
-# GRANT ALL PRIVILEGES ON grafana.* TO 'grafana'@'%';
-# FLUSH PRIVILEGES;
+CREATE DATABASE grafana;
+CREATE USER 'grafana'@'%' IDENTIFIED BY 'grafana';
+GRANT ALL PRIVILEGES ON grafana.* TO 'grafana'@'%';
+FLUSH PRIVILEGES;
 ```
 
 c. Reinicie o container `grafana-server`:
